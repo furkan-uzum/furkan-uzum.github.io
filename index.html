@@ -1,148 +1,288 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Furkan Üzüm - Portfolio</title>
+    <title>TradeLab — Piyasa analizi ve sanal işlem</title>
+    <meta name="description" content="TradeLab: canlı verili piyasa analizi, gerekçeli al-sat sinyalleri ve gerçek para riski olmadan sanal işlem. Eğitim amaçlıdır.">
+    <meta name="theme-color" content="#0d1117">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d1117'/%3E%3Cpath d='M6 22l6-7 5 4 9-11' fill='none' stroke='%2322c55e' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
     <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #262d36;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --accent: #22c55e;
+            --up: #22c55e;
+            --down: #f05252;
+            --warn-bg: #2a2111;
+            --warn-text: #e3b341;
+            --flash-up: rgba(34, 197, 94, .16);
+            --flash-down: rgba(240, 82, 82, .16);
+        }
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg: #f6f8fa;
+                --surface: #ffffff;
+                --border: #d8dee4;
+                --text: #1f2328;
+                --muted: #59636e;
+                --accent: #15803d;
+                --up: #15803d;
+                --down: #c62828;
+                --warn-bg: #fff8e1;
+                --warn-text: #7a5300;
+                --flash-up: rgba(21, 128, 61, .12);
+                --flash-down: rgba(198, 40, 40, .12);
+            }
+        }
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            background: var(--bg);
+            color: var(--text);
+            font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
         }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #77aaff 3px solid;
-        }
-        header a {
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
-        header li {
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
-            margin: 0;
-        }
-        header nav {
-            float: right;
-            margin-top: 10px;
-        }
-        section#showcase {
-            min-height: 400px;
-            background: url('background.jpg') no-repeat 0 -400px;
-            text-align: center;
-            color: #fff;
-        }
-        section#showcase h1 {
-            margin-top: 100px;
-            font-size: 55px;
-            margin-bottom: 10px;
-        }
-        section#showcase p {
-            font-size: 20px;
-        }
-        .main-content {
-            padding: 20px;
-            background: #fff;
-        }
-        .main-content h2 {
-            color: #333;
-        }
-        .main-content .content-section {
-            margin-bottom: 20px;
-        }
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-            margin-top: 20px;
+        a { color: inherit; }
+        .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+        header { border-bottom: 1px solid var(--border); }
+        header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; }
+        .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; text-decoration: none; }
+        .brand svg { width: 28px; height: 28px; }
+        nav { display: flex; gap: 20px; }
+        nav a { color: var(--muted); text-decoration: none; font-size: 15px; }
+        nav a:hover { color: var(--text); }
+
+        .notice { background: var(--warn-bg); color: var(--warn-text); font-size: 14px; text-align: center; padding: 8px 16px; }
+
+        .hero { padding: 64px 0 40px; }
+        .hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.15; margin: 0 0 16px; letter-spacing: -.02em; }
+        .hero h1 span { color: var(--accent); }
+        .hero p { color: var(--muted); font-size: 18px; max-width: 640px; margin: 0; }
+
+        section { padding: 32px 0; }
+        h2 { font-size: 22px; margin: 0 0 16px; }
+        .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+        .section-head h2 { margin: 0; }
+
+        .status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; }
+        .status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+        .status[data-state="live"]::before { background: var(--up); box-shadow: 0 0 0 3px var(--flash-up); }
+        .status[data-state="down"]::before { background: var(--down); }
+
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+        .table-card { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+        th, td { padding: 12px 16px; text-align: right; white-space: nowrap; }
+        th:first-child, td:first-child { text-align: left; }
+        th { color: var(--muted); font-weight: 500; font-size: 13px; border-bottom: 1px solid var(--border); }
+        tbody tr + tr td { border-top: 1px solid var(--border); }
+        td.sym { font-weight: 600; }
+        td.sym small { color: var(--muted); font-weight: 400; }
+        td.price { font-weight: 600; transition: background-color .6s; }
+        td.price.flash-up { background: var(--flash-up); transition: none; }
+        td.price.flash-down { background: var(--flash-down); transition: none; }
+        .up { color: var(--up); }
+        .down { color: var(--down); }
+        .muted { color: var(--muted); }
+        .source { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+        .feature { padding: 20px; }
+        .feature h3 { font-size: 17px; margin: 0 0 8px; }
+        .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+
+        .progress { padding: 20px; display: grid; gap: 14px; }
+        .progress h3 { margin: 0; font-size: 16px; }
+        .progress ul { margin: 6px 0 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+
+        footer { border-top: 1px solid var(--border); margin-top: 32px; padding: 24px 0 40px; color: var(--muted); font-size: 14px; }
+        footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+        @media (max-width: 640px) {
+            nav { display: none; }
+            .hero { padding: 40px 0 24px; }
+            table { font-size: 14px; }
+            th, td { padding: 10px 8px; }
+            .hide-sm, td.sym small { display: none; }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="container">
-            <div id="branding">
-                <h1>Furkan Üzüm</h1>
-            </div>
+        <div class="wrap">
+            <a class="brand" href="#">
+                <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="var(--surface)" stroke="var(--border)"/><path d="M6 22l6-7 5 4 9-11" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                TradeLab
+            </a>
             <nav>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#experience">Experience</a></li>
-                    <li><a href="#abilities">Abilities</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
+                <a href="#piyasa">Piyasa</a>
+                <a href="#ozellikler">Özellikler</a>
+                <a href="#durum">Durum</a>
             </nav>
         </div>
     </header>
-    <section id="showcase">
-        <div class="container">
-            <h1>Welcome to My Portfolio</h1>
-            <p>Software Engineer with expertise in web development and more.</p>
+    <div class="notice">⚠️ Eğitim amaçlıdır, yatırım tavsiyesi değildir. Gerçek emir gönderilmez.</div>
+
+    <main class="wrap">
+        <div class="hero">
+            <h1>Piyasayı analiz et,<br><span>riske girmeden</span> işlem yap.</h1>
+            <p>TradeLab; kripto, ABD hisseleri, BIST ve emtialar için canlı verili teknik ve temel analiz, gerekçeli al-sat sinyalleri ve kaldıraçlı sanal işlem (paper trading) platformudur.</p>
         </div>
-    </section>
-    <div class="container main-content">
-        <section id="about" class="content-section">
-            <h2>About</h2>
-            <p>I graduated from Erciyes University, Department of Electrical and Electronics Engineering and have more than 2 years of experience in software development. Currently, I work as a Software Engineer at ASELSAN. Throughout my career, I have been involved in software development processes by working with various projects and teams. In particular, I played important roles in critical projects such as camera web interface development, web video decoder projects and https migration studies.</p>
+
+        <section id="piyasa">
+            <div class="section-head">
+                <h2>Canlı piyasa</h2>
+                <span class="status" id="status" data-state="connecting">Bağlanıyor…</span>
+            </div>
+            <div class="card table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sembol</th>
+                            <th>Fiyat</th>
+                            <th>24s değişim</th>
+                            <th class="hide-sm">24s yüksek</th>
+                            <th class="hide-sm">24s düşük</th>
+                            <th class="hide-sm">24s hacim</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+            </div>
+            <p class="source">Veri: Binance herkese açık akışı, tarayıcınızdan doğrudan. Bazı bölgelerde Binance erişime kapalı olabilir.</p>
+            <noscript><p class="source">Canlı fiyatlar için JavaScript gerekir.</p></noscript>
         </section>
-        <section id="experience" class="content-section">
-            <h2>Experience</h2>
-            <h3>Sparse Technology Partnership with ASELSAN | 2022 - Present</h3>
-            <ul>
-                <li>Improved the usability and performance of the camera web interface using JavaScript, HTML, and CSS.</li>
-                <li>Developed a customized web decoder using ffmpeg and WebAssembly technologies for playing H265 and H264 live broadcasts with low latency.</li>
-                <li>Managed the transition from HTTP to HTTPS, including certificate, public, and private key creation processes using OpenSSL.</li>
-            </ul>
+
+        <section id="ozellikler">
+            <h2>Özellikler</h2>
+            <div class="grid">
+                <div class="card feature">
+                    <h3>Teknik analiz</h3>
+                    <p>RSI, MACD, Bollinger, Ichimoku, ATR ve formasyon tespiti. İndikatörler test edilmiş saf fonksiyonlar.</p>
+                </div>
+                <div class="card feature">
+                    <h3>Gerekçeli sinyaller</h3>
+                    <p>Kısa (15dk–4s), orta (günlük) ve uzun (haftalık + temel) vade. Her sinyal gerekçesi ve güven skoruyla gelir.</p>
+                </div>
+                <div class="card feature">
+                    <h3>Sanal işlem</h3>
+                    <p>Canlı fiyatla spot ve kaldıraçlı işlem: likidasyon, funding, komisyon ve slippage simülasyonu.</p>
+                </div>
+                <div class="card feature">
+                    <h3>Öğrenme döngüsü</h3>
+                    <p>Her işlemde "neden?" notu ve kapanış değerlendirmesi. Sinyaller kaydedilir, ağırlıklar performansa göre ayarlanır.</p>
+                </div>
+            </div>
         </section>
-        <section id="abilities" class="content-section">
-            <h2>Abilities</h2>
-            <ul>
-                <li>C++(Medium) - 1+ year of experience, including versions 14/17/20</li>
-                <li>C (Medium) - 2+ years of experience</li>
-                <li>JavaScript (Expert) - 2+ years of experience</li>
-                <li>HTML (Expert) - 2+ years of experience</li>
-                <li>CSS (Expert) - 2+ years of experience</li>
-                <li>Node.js (Medium) - 1+ years of experience</li>
-                <li>Qt (Beginner) - 1 year of experience</li>
-                <li>WebAssembly (Medium) - 1 year of experience</li>
-                <li>TCP/UDP (Medium) - 1+ year of experience</li>
-                <li>Git (Expert) - 2+ years of experience</li>
-                <li>Docker (Beginner) - 6+ months of experience</li>
-                <li>Bash (Intermediate) - 2+ years of experience</li>
-            </ul>
+
+        <section id="durum">
+            <h2>Geliştirme durumu</h2>
+            <div class="card progress">
+                <div>
+                    <h3>✅ Tamamlandı</h3>
+                    <ul>
+                        <li>İndikatörler ve kısa / orta / uzun vade teknik sinyal skoru</li>
+                        <li>Sanal işlem motoru: long/short, kaldıraç, likidasyon, komisyon, R çoklu</li>
+                        <li>Binance canlı fiyat akışı ve WebSocket yayını</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>🔧 Sırada — Kripto MVP</h3>
+                    <ul>
+                        <li>Kalıcı hesaplar ve işlem geçmişi, funding ve slippage modeli</li>
+                        <li>Stop-loss / take-profit / likidasyonun canlı fiyatla tetiklenmesi</li>
+                        <li>Grafikler, indikatör katmanları ve sanal işlem ekranı. Uygulama hazır olunca bu adreste yayınlanacak.</li>
+                    </ul>
+                </div>
+            </div>
         </section>
-        <section id="contact" class="content-section">
-            <h2>Contact</h2>
-            <p>Email: furkan.uzum@outlook.com</p>
-            <p>Phone: +90 561 618 92 10</p>
-        </section>
-    </div>
+    </main>
+
     <footer>
-        <p>Furkan Üzüm &copy; 2024</p>
+        <div class="wrap">
+            <span>© 2026 Furkan Üzüm · <a href="https://github.com/furkan-uzum">GitHub</a></span>
+            <span>Eğitim amaçlıdır; yatırım tavsiyesi değildir.</span>
+        </div>
     </footer>
+
+    <script>
+        const SYMBOLS = [["BTC", "Bitcoin"], ["ETH", "Ethereum"], ["SOL", "Solana"], ["BNB", "BNB"], ["XRP", "XRP"]];
+        const QUOTE = "USDT";
+        const STREAM_URL = "wss://stream.binance.com:9443/stream?streams="
+            + SYMBOLS.map(([s]) => `${s.toLowerCase()}${QUOTE.toLowerCase()}@miniTicker`).join("/");
+
+        const rowsEl = document.getElementById("rows");
+        const statusEl = document.getElementById("status");
+        const cells = {};
+        const last = {};
+
+        for (const [sym, name] of SYMBOLS) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td class="sym">${sym}/${QUOTE} <small>${name}</small></td>`
+                + `<td class="price">—</td><td class="chg muted">—</td>`
+                + `<td class="high hide-sm muted">—</td><td class="low hide-sm muted">—</td><td class="vol hide-sm muted">—</td>`;
+            rowsEl.appendChild(tr);
+            cells[sym + QUOTE] = {
+                price: tr.querySelector(".price"), chg: tr.querySelector(".chg"),
+                high: tr.querySelector(".high"), low: tr.querySelector(".low"), vol: tr.querySelector(".vol"),
+            };
+        }
+
+        const decimals = (n) => (n >= 100 ? 2 : n >= 1 ? 4 : 5);
+        const fmtPrice = (n) => n.toLocaleString("tr-TR", { minimumFractionDigits: decimals(n), maximumFractionDigits: decimals(n) });
+        const fmtVol = new Intl.NumberFormat("tr-TR", { notation: "compact", maximumFractionDigits: 1 });
+
+        function render(t) {
+            const c = cells[t.s];
+            if (!c) return;
+            const price = +t.c, open = +t.o;
+            const change = open ? (price - open) / open * 100 : 0;
+
+            if (last[t.s] !== undefined && price !== last[t.s]) {
+                const cls = price > last[t.s] ? "flash-up" : "flash-down";
+                c.price.classList.remove("flash-up", "flash-down");
+                void c.price.offsetWidth;  // restart the fade
+                c.price.classList.add(cls);
+                setTimeout(() => c.price.classList.remove(cls), 150);
+            }
+            last[t.s] = price;
+
+            c.price.textContent = fmtPrice(price);
+            c.chg.textContent = (change > 0 ? "+" : "") + change.toLocaleString("tr-TR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
+            c.chg.className = "chg " + (change > 0 ? "up" : change < 0 ? "down" : "muted");
+            c.high.textContent = fmtPrice(+t.h);
+            c.low.textContent = fmtPrice(+t.l);
+            c.vol.textContent = fmtVol.format(+t.q) + " " + QUOTE;
+        }
+
+        const STATUS_TEXT = { connecting: "Bağlanıyor…", live: "Canlı", down: "Bağlantı yok — yeniden deneniyor" };
+        function setStatus(state) {
+            statusEl.dataset.state = state;
+            statusEl.textContent = STATUS_TEXT[state];
+        }
+
+        let attempt = 0;
+        function connect() {
+            const ws = new WebSocket(STREAM_URL);
+            ws.onmessage = (e) => {
+                const t = JSON.parse(e.data).data;
+                if (!t || t.e !== "24hrMiniTicker") return;
+                attempt = 0;
+                setStatus("live");
+                render(t);
+            };
+            ws.onclose = () => {
+                attempt++;
+                setStatus(attempt >= 3 ? "down" : "connecting");
+                setTimeout(connect, Math.min(30000, 1000 * 2 ** (attempt - 1)));
+            };
+        }
+        connect();
+    </script>
 </body>
 </html>
